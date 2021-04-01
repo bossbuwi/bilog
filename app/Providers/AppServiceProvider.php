@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +24,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        //removes the data wrapping from JSON requests
+        //remove this code if pagination is to be used
+        //the frontend should adjust if it is removed
+        JsonResource::withoutWrapping();
     }
 }
