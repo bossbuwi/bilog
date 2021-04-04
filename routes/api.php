@@ -26,5 +26,6 @@ Route::get('config', [ConfigurationController::class, 'index']);
 Route::get('rules', [RuleController::class, 'index']);
 Route::post('login/', [UserController::class, 'store']);
 Route::get('events/', [EventController::class, 'index']);
-Route::get('day/', [EventController::class, 'getEventOnDate']);
+Route::get('event/', [EventController::class, 'show']);
 Route::post('reserve/', [EventController::class, 'store']);
+Route::put('reserve/', [EventController::class, 'store']);

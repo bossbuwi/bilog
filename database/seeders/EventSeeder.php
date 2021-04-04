@@ -60,8 +60,8 @@ class EventSeeder extends Seeder
                 'created_at' => $current_date_time, 'updated_at' => $current_date_time],
 
             ['user' => 'ralagrio', 'system' => 'OS', 'zone' => 'O4,O5',
-            'type' => 'COB', 'jira_case' => 'MD-12345', 'api_used' => 'OPAY,IPAY,CLIP,TRAD,DEAL,SIRS,CIRS',
-            'compiled_sources' => 'FTC0630,FT0600,INPAYDD', 'feature_on' => 'CRE010,CAP209,CAP210,CSW220,CLE072,CSD158',
+            'type' => 'COB', 'jira_case' => 'MD-12345', 'api_used' => 'OPAY,IPAY',
+            'compiled_sources' => 'FTC0630,FT0600,INPAYDD', 'feature_on' => 'CRE010',
             'feature_off' => 'CAP205,CAP207', 'start_date' => '2021-04-08', 'end_date' => '2021-04-10',
             'created_at' => $current_date_time, 'updated_at' => $current_date_time],
         ];
