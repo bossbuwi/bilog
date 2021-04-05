@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Http\Resources\UserResource as UserResource;
 use App\Models\Configuration;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
@@ -36,6 +38,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        Log::error($request);
         //store username and password values from request
         $username = $request->username;
         $password = $request->password;
@@ -106,13 +109,14 @@ class UserController extends Controller
                 if(User::where('username', $username)->exists()) {
                     $authUser = User::where('username', $username)->first();
                     $authUser->password = null;
-                    return $authUser;
+                    return new UserResource($authUser);
                 } else {
                     $newUser = new User();
                     $newUser->username = $username;
                     $newUser->admin = false;
-                    $newUser->save();
-                    return User::where('username', $username)->first();
+                    if ($newUser->save()) {
+                        return new UserResource(User::where('username', $username)->first());
+                    }
                 }
             } else {
                 return null;

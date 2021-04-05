@@ -18,14 +18,14 @@ use App\Http\Controllers\EventController;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
 Route::get('config', [ConfigurationController::class, 'index']);
 Route::get('rules', [RuleController::class, 'index']);
-Route::post('login/', [UserController::class, 'store']);
 Route::get('events/', [EventController::class, 'index']);
 Route::get('event/', [EventController::class, 'show']);
 Route::post('reserve/', [EventController::class, 'store']);
 Route::put('reserve/', [EventController::class, 'store']);
+Route::post('login/', [UserController::class, 'store']);

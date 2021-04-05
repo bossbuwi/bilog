@@ -66,6 +66,6 @@ class EventSeeder extends Seeder
             'created_at' => $current_date_time, 'updated_at' => $current_date_time],
         ];
 
-        DB::table('events')->insert($events);
+        // DB::table('events')->insert($events);
     }
 }
