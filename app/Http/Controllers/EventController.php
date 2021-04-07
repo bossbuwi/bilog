@@ -8,6 +8,9 @@ use App\Http\Resources\EventResource as EventResource;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
+use SimpleXLSXGen;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Schema;
 
 class EventController extends Controller
 {
@@ -162,14 +165,72 @@ class EventController extends Controller
     /**
      *
      */
-    public function getEventOnDate(Request $request)
+    public function generateEventReport(Request $request)
     {
-        $reqDate = $request->query('selectedDay');
-        $cReqDate = Carbon::createFromFormat('Y-m-d', $reqDate);
-        $fReqDate = $cReqDate->format('Y-m-d');
-
-        $events = Event::where('start_date', '<=', $fReqDate)->where('end_date', '>=', $fReqDate)->get();
-        return EventResource:: collection($events);
+        Log::error($request);
+        //get the events specified by the query and save them in an Eloquent collection
+        //this part is where the database logic should be
+        $eventsReq = Event::where('_id', '>', 0);
+        if ($request->cursysver == 'true') {
+            $sysup = Event::where('type','SYSUP')
+                ->orderBy('end_date', 'DESC')->first();
+            $eventsReq->where('start_date','>=', $sysup->end_date);
+            $eventsReq->where('type','<>','SYSUP');
+            if ($request->zone !== 'All') {
+                $eventsReq->where('zone', $request->zone);
+            }
+            if ($request->type !== 'All') {
+                $eventsReq->where('type', $request->type);
+            }
+            $eventsReq = $eventsReq->get();
+            $eventsReq->prepend($sysup);
+        } else if ($request->cursysver == 'false') {
+            if ($request->zone !== 'All') {
+                $eventsReq->where('zone', $request->zone);
+            }
+            if ($request->type !== 'All') {
+                $eventsReq->where('type', $request->type);
+            }
+            if ($request->startDate !== NULL) {
+                $eventsReq->where('start_date', '>=', $request->startDate);
+            }
+            if ($request->endDate !== NULL) {
+                $eventsReq->where('end_date', '<=',$request->endDate);
+            }
+            $eventsReq->orderBy('start_date', 'DESC');
+            $eventsReq = $eventsReq->get();
+        }
+        //check for a request for report generation
+        if ($request->requestReport == 'true') {
+            //write all column names of the events table in an array
+            $columns = Schema::getColumnListing('events');
+            //create an array that will hold the data to be written in excel
+            //put the array containing the column names in the data array
+            $data = [
+                    $columns
+                ];
+            //loop through the collection
+            foreach ($eventsReq as $item) {
+                //convert each item in the Eloquent collection to an array
+                $itemAttr = $item->attributesToArray();
+                //push each item into the data array created previously
+                array_push($data, $itemAttr);
+            }
+            //set the path and the filename for the excel file to be created
+            $filePath = storage_path().'/datatypes.xlsx';
+            //call SimpleXLSXGen, create a file from the data array and save it on the provided path
+            //comment this out for now to prevent compiling an excel file
+            SimpleXLSXGen::fromArray($data)->saveAs($filePath);
+            //create a variable that will hold the header containing the file type for the response
+            $headers = [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            ];
+            //return the response as a file
+            return response()->download($filePath, "Report.xlsx", $headers);
+        } else {
+            //return the events as json
+            return EventResource::collection($eventsReq);
+        }
     }
 
     /**
