@@ -27,5 +27,6 @@ Route::get('rules', [RuleController::class, 'index']);
 Route::get('events/', [EventController::class, 'index']);
 Route::get('event/', [EventController::class, 'show']);
 Route::post('reserve/', [EventController::class, 'store']);
+Route::get('report/', [EventController::class, 'generateEventReport']);
 Route::put('reserve/', [EventController::class, 'store']);
 Route::post('login/', [UserController::class, 'store']);
