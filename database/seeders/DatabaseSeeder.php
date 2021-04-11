@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(UserSeeder::class);
         $this->call(ConfigurationSeeder::class);
+        $this->call(SystemSeeder::class);
         $this->call(RuleSeeder::class);
         $this->call(EventSeeder::class);
     }

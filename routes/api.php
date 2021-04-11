@@ -6,6 +6,7 @@ use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\RuleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\SystemController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,11 +23,23 @@ use App\Http\Controllers\EventController;
 //     return $request->user();
 // });
 
-Route::get('config', [ConfigurationController::class, 'index']);
+//user routes
+Route::post('login/', [UserController::class, 'store']);
+Route::get('users/', [UserController::class, 'index']);
+Route::put('users/', [UserController::class, 'updateAdmins']);
+
+//rule routes
 Route::get('rules', [RuleController::class, 'index']);
+
+//system routes
+Route::get('systems', [SystemController::class, 'index']);
+
+//event routes
 Route::get('events/', [EventController::class, 'index']);
 Route::get('event/', [EventController::class, 'show']);
 Route::post('reserve/', [EventController::class, 'store']);
 Route::get('report/', [EventController::class, 'generateEventReport']);
 Route::put('reserve/', [EventController::class, 'store']);
-Route::post('login/', [UserController::class, 'store']);
+
+//config routes
+Route::get('config', [ConfigurationController::class, 'index']);

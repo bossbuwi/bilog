@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Http\Resources\UserResource as UserResource;
 use App\Models\Configuration;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Collection;
 
 class UserController extends Controller
 {
@@ -17,7 +18,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        $users = User::all();
+        return UserResource:: collection($users);
     }
 
     /**
@@ -38,148 +40,47 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        Log::error($request);
-        //store username and password values from request
+        //variable to temporarily store username and password values from request
         $username = $request->username;
         $password = $request->password;
-        if (Configuration::where('name','devmode')->where('value','Y')->exists()) {
-            if (User::where('username',$username)->where('password',$password)->exists()) {
-                //if yes, return the record, together with the password
-                return User::where('username',$username)->where('password',$password)->first();
-            } else {
-                $ldap = ldap_connect("ldap://misys.global.ad:389");
-                $ldaprdn = 'MISYSROOT' . "\\" . $username;
-                ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
-                ldap_set_option($ldap, LDAP_OPT_REFERRALS, 0);
 
-                if (@ldap_bind($ldap, $ldaprdn, $password)) {
-                    if (User::where('username', $username)->exists()) {
-                        $updateUser = User::where('username',$username)->first();
-                        $updateUser->password = $password;
-                        $updateUser->save();
-                        return User::where('username',$username)->first();
-                    } else {
-                        $newUser = new User();
-                        $newUser->username = $username;
-                        $newUser->password = $password;
-                        $newUser->admin = false;
-                        $newUser->save();
-                        return User::where('username',$newUser->username)->first();
-                    }
-                } else {
-                    return null;
-                }
-            }
-        } else if (Configuration::where('name','savepassword')->where('value','Y')->exists()) {
-            //if feature is active, check if the user-password combo already exists in the local database
-            if (User::where('username',$username)->where('password',$password)->exists()) {
-                //if yes, return the record, together with the password
-                return User::where('username',$username)->where('password',$password)->first();
-            } else {
-                $ldap = ldap_connect("ldap://misys.global.ad:389");
-                $ldaprdn = 'MISYSROOT' . "\\" . $username;
-                ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
-                ldap_set_option($ldap, LDAP_OPT_REFERRALS, 0);
+        $errorUser = new User();
+        $errorUser->username = '';
+        $errorUser->password = '';
+        $errorUser->admin = false;
 
-                if (@ldap_bind($ldap, $ldaprdn, $password)) {
-                    if (User::where('username', $username)->exists()) {
-                        $updateUser = User::where('username',$username)->first();
-                        $updateUser->password = $password;
-                        $updateUser->save();
-                        return User::where('username',$username)->first();
-                    } else {
-                        $newUser = new User();
-                        $newUser->username = $username;
-                        $newUser->password = $password;
-                        $newUser->admin = false;
-                        $newUser->save();
-                        return User::where('username',$newUser->username)->first();
-                    }
-                } else {
-                    return null;
-                }
-            }
+        if ($password == NULL || $username == NULL) {
+            return new UserResource($errorUser);
+        } else if ($password == '' || $username == '') {
+            return new UserResource($errorUser);
+        } else if (ctype_space($password) || ctype_space($username)) {
+            return new UserResource($errorUser);
+        } else if (User::where('username', $username)->where('password', $password)->exists()) {
+            $user = User::where('username', $username)->where('password', $password)->first();
+            $user->password = '';
+            return new UserResource($user);
         } else {
             $ldap = ldap_connect("ldap://misys.global.ad:389");
             $ldaprdn = 'MISYSROOT' . "\\" . $username;
             ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
-            ldap_set_option($ldap, LDAP_OPT_REFERRALS, 0);
 
             if (@ldap_bind($ldap, $ldaprdn, $password)) {
-                if(User::where('username', $username)->exists()) {
-                    $authUser = User::where('username', $username)->first();
-                    $authUser->password = null;
-                    return new UserResource($authUser);
+                if (User::where('username', $username)->exists()) {
+                    $user = User::where('username', $username)->first();
+                    $user->password = '';
+                    return new UserResource($user);
                 } else {
                     $newUser = new User();
                     $newUser->username = $username;
                     $newUser->admin = false;
                     if ($newUser->save()) {
-                        return new UserResource(User::where('username', $username)->first());
-                    }
-                }
-            } else {
-                return null;
-            }
-        }
-    }
-
-    public function test(Request $request) {
-        //store username and password values from request
-        $username = $request->username;
-        $password = $request->password;
-        //check if the save password feature is active.
-        if (Configuration::where('name','savepassword')->where('value','Y')->exists()) {
-            //if feature is active, check if the user-password combo already exists in the local database
-            if (User::where('username',$username)->where('password',$password)->exists()) {
-                //if yes, return the record, together with the password
-                return User::where('username',$username)->where('password',$password)->first();
-            } else {
-                $ldap = ldap_connect("ldap://misys.global.ad:389");
-                $ldaprdn = 'MISYSROOT' . "\\" . $username;
-                ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
-                ldap_set_option($ldap, LDAP_OPT_REFERRALS, 0);
-
-                if (@ldap_bind($ldap, $ldaprdn, $password)) {
-                    if (User::where('username', $username)->exists()) {
-                        $updateUser = User::where('username',$username)->first();
-                        $updateUser->password = $password;
-                        $updateUser->save();
-                        return User::where('username',$username)->first();
+                        return new UserResource($newUser);
                     } else {
-                        $newUser = new User();
-                        $newUser->username = $username;
-                        $newUser->password = $password;
-                        $newUser->admin = false;
-                        $newUser->save();
-                        return User::where('username',$newUser->username)->first();
+                        return new UserResource($errorUser);
                     }
-                } else {
-                    return null;
                 }
-            }
-        } else {
-            $ldap = ldap_connect("ldap://misys.global.ad:389");
-            $ldaprdn = 'MISYSROOT' . "\\" . $username;
-            ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
-            ldap_set_option($ldap, LDAP_OPT_REFERRALS, 0);
-
-            if (@ldap_bind($ldap, $ldaprdn, $password)) {
-                if(User::where('username', $username)->exists()) {
-                    $authUser = User::where('username', $username)->first();
-                    $authUser->password = null;
-                    return $authUser;
-                } else {
-                    $newUser = new User();
-                    $newUser->username = $username;
-                    $newUser->admin = false;
-                    $newUser->save();
-                    return User::where('username', $username)->first();
-                }
-            } else if ($username == 'admin'){
-                return User::where('username', $username)->first();
             } else {
-                return null;
+                return new UserResource($errorUser);
             }
         }
     }
@@ -227,5 +128,24 @@ class UserController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function updateAdmins(Request $request)
+    {
+        Log::error($request);
+        $itemCount = count($request->input('*.*.username'));
+        if ($itemCount > 0) {
+            for ($i = 0; $i < $itemCount; $i++) {
+                if(User::where('id', $request->input('*.'.$i.'.id'))->exists()) {
+                    $update = User::where('id', $request->input('*.'.$i.'.id'))->first();
+                    $update->admin = $request->input('*.'.$i.'.admin')[0];
+                    if ($update->save()) {
+
+                    }
+                }
+            }
+        }
+
+        return true;
     }
 }
