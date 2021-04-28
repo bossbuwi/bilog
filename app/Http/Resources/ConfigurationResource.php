@@ -14,6 +14,16 @@ class ConfigurationResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        // return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'value' => $this->value,
+            'length' => $this->length,
+            'description' => $this->description,
+            'validValues' => $this->valid_values,
+            'defaultValue' => $this->default_value,
+            'lastModifiedBy' => $this->last_modified_by,
+        ];
     }
 }

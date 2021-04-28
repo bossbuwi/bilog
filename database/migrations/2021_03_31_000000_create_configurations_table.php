@@ -18,6 +18,8 @@ class CreateConfigurationsTable extends Migration
             $table->string('name');
             $table->string('value');
             $table->string('description');
+            $table->string('valid_values');
+            $table->string('default_value');
         });
     }
 

@@ -43,7 +43,6 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-        Log::error($request);
         if ($request->isMethod('post')) {
             $event = new Event();
             if ($request->has('params')) {
@@ -92,9 +91,7 @@ class EventController extends Controller
             }
         } else if ($request->isMethod('put')) {
             if ($request->has('params')) {
-                Log::error('papasok dpat dito sa params');
                 if(Event::where('_id',$request->input('params._id'))->exists()) {
-                    Log::error('papasok dpat dito sa exists');
                     $event = Event::where('_id',$request->input('params._id'))->first();
                     $event->user = $request->input('params.user');
                     $event->system = $request->input('params.system');
@@ -167,26 +164,38 @@ class EventController extends Controller
      */
     public function generateEventReport(Request $request)
     {
-        Log::error($request);
         //get the events specified by the query and save them in an Eloquent collection
         //this part is where the database logic should be
         $eventsReq = Event::where('_id', '>', 0);
+        if ($request->system !== 'All') {
+            $eventsReq->where('system', $request->system);
+        }
         if ($request->cursysver == 'true') {
-            $sysup = Event::where('type','SYSUP')
+            if (Event::where('type', 'SYSUP')->exists()) {
+                $sysup = Event::where('type','SYSUP')
                 ->orderBy('end_date', 'DESC')->first();
-            $eventsReq->where('start_date','>=', $sysup->end_date);
-            $eventsReq->where('type','<>','SYSUP');
-            if ($request->zone !== 'All') {
-                $eventsReq->where('zone', $request->zone);
+                $eventsReq->where('start_date','>=', $sysup->end_date);
+                $eventsReq->where('type','<>','SYSUP');
+                if ($request->zone !== 'All') {
+                    $eventsReq->where('zone', $request->zone);
+                }
+                if ($request->type !== 'All') {
+                    $eventsReq->where('type', $request->type);
+                }
+                $eventsReq = $eventsReq->get();
+                $eventsReq->prepend($sysup);
+            } else {
+                if ($request->zone !== 'All') {
+                    $eventsReq->where('zone', 'LIKE', $request->zone);
+                }
+                if ($request->type !== 'All') {
+                    $eventsReq->where('type', $request->type);
+                }
+                $eventsReq = $eventsReq->get();
             }
-            if ($request->type !== 'All') {
-                $eventsReq->where('type', $request->type);
-            }
-            $eventsReq = $eventsReq->get();
-            $eventsReq->prepend($sysup);
         } else if ($request->cursysver == 'false') {
             if ($request->zone !== 'All') {
-                $eventsReq->where('zone', $request->zone);
+                $eventsReq->where('zone', 'LIKE', $request->zone);
             }
             if ($request->type !== 'All') {
                 $eventsReq->where('type', $request->type);
