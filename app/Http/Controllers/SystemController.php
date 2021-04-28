@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\System;
 use App\Http\Resources\SystemResource as SystemResource;
+use Illuminate\Support\Facades\Log;
 
 class SystemController extends Controller
 {
@@ -37,7 +38,42 @@ class SystemController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $itemCount = count($request->input('*.globalPrefix'));
+        for ($i = 0; $i < $itemCount; $i++) {
+            if ($request->input('*.id')[$i] == NULL) {
+                if (System::where('global_prefix',$request->input('*.globalPrefix')[$i])
+                    ->where('zone1_prefix',$request->input('*.zone1Prefix')[$i])
+                    ->where('zone2_prefix',$request->input('*.zone2Prefix')[$i])->exists()) {
+                    return false;
+                } else {
+                    $newSystem = new System();
+                    $newSystem->global_prefix = $request->input('*.globalPrefix')[$i];
+                    $newSystem->machine = $request->input('*.machine')[$i];
+                    $newSystem->zone1_prefix = $request->input('*.zone1Prefix')[$i];
+                    $newSystem->zone1_name = $request->input('*.zone1Name')[$i];
+                    $newSystem->zone2_prefix = $request->input('*.zone2Prefix')[$i];
+                    $newSystem->zone2_name = $request->input('*.zone2Name')[$i];
+                    $newSystem->login = $request->input('*.loginNames')[$i];
+                    $newSystem->sysadmin = $request->input('*.systemAdmin')[$i];
+                    $newSystem->url = $request->input('*.systemUrl')[$i];
+                    $newSystem->save();
+                }
+            } else {
+                $updateSystem = System::where('id', $request->input('*.id')[$i])->first();
+                $updateSystem->global_prefix = $request->input('*.globalPrefix')[$i];
+                $updateSystem->machine = $request->input('*.machine')[$i];
+                $updateSystem->zone1_prefix = $request->input('*.zone1Prefix')[$i];
+                $updateSystem->zone1_name = $request->input('*.zone1Name')[$i];
+                $updateSystem->zone2_prefix = $request->input('*.zone2Prefix')[$i];
+                $updateSystem->zone2_name = $request->input('*.zone2Name')[$i];
+                $updateSystem->login = $request->input('*.loginNames')[$i];
+                $updateSystem->sysadmin = $request->input('*.systemAdmin')[$i];
+                $updateSystem->url = $request->input('*.systemUrl')[$i];
+                $updateSystem->save();
+            }
+        }
+
+        return true;
     }
 
     /**

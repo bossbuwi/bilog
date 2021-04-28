@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Configuration;
 use App\Http\Resources\ConfigurationResource as ConfigurationResource;
+use Illuminate\Support\Facades\Log;
 
 class ConfigurationController extends Controller
 {
@@ -37,7 +38,68 @@ class ConfigurationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $itemCount = count($request->input('*.name'));
+        for ($i = 0; $i < $itemCount; $i++) {
+            if (Configuration::where('name', $request->input('*.name')[$i])->exists()) {
+                $config = Configuration::where('name', $request->input('*.name')[$i])->first();
+                if (strlen($request->input('*.value')[$i]) === $config->length) {
+                    if ($config->valid_values == 'numeric') {
+                        if (ctype_digit($request->input('*.value')[$i])) {
+                            $config->value = $request->input('*.value')[$i];
+                            $config->last_modified_by = $request->input('*.lastModifiedBy')[$i];
+                            $config->save();
+                        } else {
+                            $config->value = $config->default_value;
+                            $config->last_modified_by = $request->input('*.lastModifiedBy')[$i];
+                            $config->save();
+                        }
+                    } else if ($config->valid_values == 'alpha') {
+                        if (ctype_alpha($request->input('*.value')[$i])) {
+                            $config->value = $request->input('*.value')[$i];
+                            $config->last_modified_by = $request->input('*.lastModifiedBy')[$i];
+                            $config->save();
+                        } else {
+                            $config->value = $config->default_value;
+                            $config->last_modified_by = $request->input('*.lastModifiedBy')[$i];
+                            $config->save();
+                        }
+                    } else if ($config->valid_values == 'alphanumeric') {
+                        if (ctype_alnum($request->input('*.value')[$i])) {
+                            $config->value = $request->input('*.value')[$i];
+                            $config->last_modified_by = $request->input('*.lastModifiedBy')[$i];
+                            $config->save();
+                        } else {
+                            $config->value = $config->default_value;
+                            $config->last_modified_by = $request->input('*.lastModifiedBy')[$i];
+                            $config->save();
+                        }
+                    } else {
+                        $validValues = strtok($config->valid_values, ',');
+                        $validValuesArr = array();
+                        while ($validValues !== false) {
+                            array_push($validValuesArr, $validValues);
+                            $validValues = strtok(',');
+                        }
+                        $key = array_search($request->input('*.value')[$i], $validValuesArr);
+                        if ($key === false) {
+                            $config->value = $config->default_value;
+                            $config->last_modified_by = $request->input('*.lastModifiedBy')[$i];
+                            $config->save();
+                        } else {
+                            $config->value = $request->input('*.value')[$i];
+                            $config->last_modified_by = $request->input('*.lastModifiedBy')[$i];
+                            $config->save();
+                        }
+                    }
+                } else {
+                    $config->value = $config->default_value;
+                    $config->save();
+                }
+            } else {
+                return 'false';
+            }
+        }
+        return 'true';
     }
 
     /**

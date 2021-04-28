@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Rule;
 use App\Http\Resources\RuleResource as RuleResource;
+use Illuminate\Support\Facades\Log;
 
 class RuleController extends Controller
 {
@@ -37,7 +38,27 @@ class RuleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $itemCount = count($request->input('*.id'));
+        for ($i = 0; $i < $itemCount; $i++) {
+            if ($request->input('*.id')[$i] == NULL) {
+                if ($request->input('*.statement')[$i] == '*') {
+
+                } else {
+                    $newRule = new Rule();
+                    $newRule->statement = $request->input('*.statement')[$i];
+                    $newRule->save();
+                }
+            } else {
+                if ($request->input('*.statement')[$i] == '*') {
+                    $deleteRule = Rule::where('id', $request->input('*.id')[$i])->first();
+                    $deleteRule->delete();
+                } else {
+                    $updateRule = Rule::where('id', $request->input('*.id')[$i])->first();
+                    $updateRule->statement = $request->input('*.statement')[$i];
+                    $updateRule->save();
+                }
+            }
+        }
     }
 
     /**

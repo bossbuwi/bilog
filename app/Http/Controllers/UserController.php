@@ -85,15 +85,19 @@ class UserController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function show(Request $request)
     {
-        //
+        $username = $request->username;
+        if (User::where('username', $username)->exists()) {
+            $user = User::where('username', $username)->first();
+            if ($user->admin) {
+                return 'true';
+            } else {
+                return 'false';
+            }
+        } else {
+            return 'false';
+        }
     }
 
     /**
@@ -132,7 +136,6 @@ class UserController extends Controller
 
     public function updateAdmins(Request $request)
     {
-        Log::error($request);
         $itemCount = count($request->input('*.*.username'));
         if ($itemCount > 0) {
             for ($i = 0; $i < $itemCount; $i++) {
