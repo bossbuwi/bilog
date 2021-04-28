@@ -16,7 +16,6 @@ class UserSeeder extends Seeder
     {
         $users = [
             ['username' => 'admin', 'password' => 'admin', 'admin' => true],
-            ['username' => 'micmanan', 'password' => '', 'admin' => true]
 
         ];
 
