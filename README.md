@@ -1,62 +1,55 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# bilog
+## _Backend Data Circle_
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This project was built with [Laravel](https://laravel.com/) version 8.35.1.<br>
+This project was made to serve as the REST endpoint for [IT Log](https://github.com/bossbuwi/itlog). The version releases are [here](https://github.com/bossbuwi/bilog/releases). Current version is 1.0-Argon and is ready for production. This project is just the back end for an event logging app. For this to function completely, a compatible front end that consumes data using a REST endpoint must be used, in this case, [IT Log](https://github.com/bossbuwi/itlog).
 
-## About Laravel
+### Setup for Development
+Note: These instructions assume that XAMPP is used as the development server. As such, the PHP CLI is also provided by XAMPP. If you are using a different setup, please adjust the instructions accordingly.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+#### Prerequisites
+- An editor, preferably VS Code
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+#### Installing XAMPP
+1. Download XAMPP installer from [here](https://www.apachefriends.org/index.html).
+2. Run the installer and install on desired directory. Just be sure to remember where it is installed.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+#### Installing Composer
+Note: XAMPP must be installed before installing Composer because Composer needs a PHP command line interface to be installed properly. XAMPP provides the PHP CLI for this setup. If you already have a different PHP CLI installed, then proceed even without XAMPP and adjust the instructions accordingly.
+1. Download Composer from [here](https://getcomposer.org/download/).
+2. Run the installer.
+3. When prompted for a PHP command line interface, select the php.exe on `<XAMPP installation directory>/php/php.exe`.
+4. To check if Composer is properly installed, open a command prompt window and enter `composer -v`.
 
-## Learning Laravel
+#### Installing Laravel
+1. Download the Laravel installer using Composer by entering `composer global require laravel/installer` on a command prompt window.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+#### Setting up the Repository
+1. Clone the repository from Github.
+2. Open a command prompt window on the repository's root directory.
+3. Install the Laravel dependencies by entering `composer install` on the command prompt.
+4. Copy the .env.example file and rename the copy into .env. This could be done manually or by entering `copy .env.example .env` on the command prompt.
+5. Generate the application key needed by Laravel by entering `php artisan key:generate` on the command prompt.
+6. Enter `php artisan server` on the command prompt to start the development server.
+7. Go to the address shown after `Starting Laravel development server:` on the command prompt. If Laravel is working, a page must be displayed.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+#### Setting up the Database
+1. Run XAMPP.
+2. Start the Apache and MySQL modules.
+3. Go to the MySQL admin panel by clicking the admin button on the MySQL row on XAMPP.
+4. Click the Databases tab.
+5. On the Create Database input field, type `db_bilog`. This would be the database used by bilog.
+6. Click Create button to finish the database creation.
+7. Open the .env file on the repository's root folder using a text editor.
+8. Find the line `DB_DATABASE` and set it to `db_bilog`.
+9. If you have a different MySQL user and password, set it on the `DB_USERNAME` and `DB_PASSWORD`. If you are using the default XAMPP MySQL passwords, just leave it as is.
+10. Find `DB_PORT` and check if it is the same as the port used by MySQL on XAMPP.
+11. Open a command prompt window on the repository's root directory.
+12. Enter `php artisan migrate` to run all of the migrations set by the project. This will create several tables on the `db_bilog` database.
+13. Enter `php artisan db:seed` to seed the tables with the initial values set by the project. This will create the default records on the database as specified on the seeder files.
+14. Go to `http://localhost:<apache http port>/phpmyadmin/` and check the `db_bilog` database if the tables and records have been added.
 
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/)**
-- **[OP.GG](https://op.gg)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+#### Running the Development Server
+1. Run XAMPP and start the Apache and MySQL modules.
+2. Open a command prompt on the project's root directory.
+3. Enter `php artisan serve` to start the Laravel server.
