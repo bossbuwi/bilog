@@ -16,21 +16,12 @@ class ConfigurationSeeder extends Seeder
     public function run()
     {
         $configurations = [
-            ['name' => 'offline', 'value' => 'N', 'length' => '1',
-                'description' => 'Flag that indicates if the REST server is offline.',
-                'valid_values' => 'Y,N', 'default_value' => 'N', 'last_modified_by' => 'admin'],
             ['name' => 'loglevel', 'value' => 'V', 'length' => '1',
-                'description' => 'Indicates the frontend\'s logging level.',
+                'description' => 'Indicates the frontend\'s logging level. N is None, V is Verbose, I is Info, W is Warning and E is Error.',
                 'valid_values' => 'N,V,I,W,E', 'default_value' => 'N', 'last_modified_by' => 'admin'],
-            ['name' => 'savepassword', 'value' => 'N', 'length' => '1',
-                'description' => 'Save the password of the users in the database.',
-                'valid_values' => 'Y,N', 'default_value' => 'N', 'last_modified_by' => 'admin'],
-            ['name' => 'fulledit', 'value' => 'N', 'length' => '1',
-                'description' => 'Give non admin users freedom to edit all event details.',
-                'valid_values' => 'Y,N', 'default_value' => 'N', 'last_modified_by' => 'admin'],
-            ['name' => 'allowdelete', 'value' => 'N', 'length' => '1',
-                'description' => 'Give non admin users freedom to delete events.',
-                'valid_values' => 'Y,N', 'default_value' => 'N', 'last_modified_by' => 'admin'],
+            ['name' => 'navtabsdesign', 'value' => 'M', 'length' => '1',
+                'description' => 'Sets the design of the navigation tabs. C is for Classic tabs and M is for Modern tabs.',
+                'valid_values' => 'C,M', 'default_value' => 'C', 'last_modified_by' => 'admin'],
             ['name' => 'displayauthor', 'value' => 'N', 'length' => '1',
                 'description' => 'Toggles if the original developer/s are displayed in the frontend\'s about information.',
                 'valid_values' => 'Y,N', 'default_value' => 'N', 'last_modified_by' => 'admin'],
@@ -38,10 +29,10 @@ class ConfigurationSeeder extends Seeder
                 'description' => 'Gives all non admin users access to the reports tab.',
                 'valid_values' => 'Y,N', 'default_value' => 'N', 'last_modified_by' => 'admin'],
             ['name' => 'primaryseed', 'value' => '9', 'length' => '1',
-                'description' => 'The primary seed for encrypting the user\'s login details.',
+                'description' => 'The primary seed for encrypting the user\'s login details. Changing this will cause users to be logged out after a page reload.',
                 'valid_values' => 'numeric', 'default_value' => '5', 'last_modified_by' => 'admin'],
             ['name' => 'keycode', 'value' => 'AkRlO62y', 'length' => '8',
-                'description' => 'The key for solving the user\'s saved login code.',
+                'description' => 'The key for solving the user\'s saved login code. Changing this will cause users to be logged out after a page reload.',
                 'valid_values' => 'alphanumeric', 'default_value' => 'Az1By0Mj', 'last_modified_by' => 'admin'],
         ];
 
