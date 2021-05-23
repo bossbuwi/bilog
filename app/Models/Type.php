@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Event;
 
-class System extends Model
+class Type extends Model
 {
     use HasFactory;
     public $timestamps = false;
@@ -15,4 +15,10 @@ class System extends Model
     {
         return $this->hasMany(Event::class);
     }
+
+    protected $casts = [
+        'restricted' => 'boolean',
+        'maintenance' => 'boolean',
+        'upgrade' => 'boolean'
+    ];
 }

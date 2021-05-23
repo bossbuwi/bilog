@@ -7,6 +7,8 @@ use App\Http\Controllers\RuleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\SystemController;
+use App\Http\Controllers\TypeController;
+use App\Http\Controllers\TestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,14 +38,21 @@ Route::post('rules/', [RuleController::class, 'store']);
 //system routes
 Route::get('systems/', [SystemController::class, 'index']);
 Route::post('systems/', [SystemController::class, 'store']);
+Route::get('system_version/', [SystemController::class, 'systemVersion']);
 
 //event routes
 Route::get('events/', [EventController::class, 'index']);
 Route::get('event/', [EventController::class, 'show']);
-Route::post('reserve/', [EventController::class, 'store']);
-Route::get('report/', [EventController::class, 'generateEventReport']);
-Route::put('reserve/', [EventController::class, 'store']);
+Route::post('reserve/', [EventController::class, 'postEvent']);
+Route::put('reserve/', [EventController::class, 'editEvent']);
+Route::get('report/', [EventController::class, 'generateReport']);
 
 //config routes
 Route::get('config/', [ConfigurationController::class, 'index']);
 Route::post('config/', [ConfigurationController::class, 'store']);
+
+//type routes
+Route::get('types/', [TypeController::class, 'index']);
+
+//test routes
+Route::get('test/', [TestController::class, 'test']);

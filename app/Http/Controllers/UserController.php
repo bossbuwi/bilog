@@ -5,9 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Http\Resources\UserResource as UserResource;
-use App\Models\Configuration;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Collection;
 
 class UserController extends Controller
 {

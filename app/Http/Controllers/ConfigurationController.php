@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+
 use App\Models\Configuration;
 use App\Http\Resources\ConfigurationResource as ConfigurationResource;
-use Illuminate\Support\Facades\Log;
 
 class ConfigurationController extends Controller
 {

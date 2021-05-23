@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
 use App\Models\System;
 use App\Http\Resources\SystemResource as SystemResource;
-use Illuminate\Support\Facades\Log;
+use App\Http\Resources\EventResource as EventResource;
 
 class SystemController extends Controller
 {
@@ -76,15 +78,16 @@ class SystemController extends Controller
         return true;
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function systemVersion(Request $request)
     {
-        //
+        try {
+            $system = System::where('global_prefix', $request->input('globalPrefix'))->firstOrFail();
+        } catch (ModelNotFoundException $e) {
+            abort(404, 'System not found.');
+        }
+
+        $event = System::find($system->id)->event()->systemUpgrade('last')->firstOrFail();
+        return new EventResource($event);
     }
 
     /**

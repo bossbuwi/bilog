@@ -18,9 +18,9 @@ class EventResource extends JsonResource
         return [
             '_id' => $this->_id,
             'user' => $this->user,
-            'system' => $this->system,
+            'system' => $this->system->global_prefix,
             'zone' => $this->zone,
-            'type' => $this->type,
+            'type' => $this->type->event_code,
             'startDate' => $this->start_date,
             'endDate' => $this->end_date,
             'apiUsed' => $this->api_used,
@@ -28,6 +28,8 @@ class EventResource extends JsonResource
             'featureOn' => $this->feature_on,
             'featureOff' => $this->feature_off,
             'jiraCase' => $this->jira_case,
+            'createdBy' => $this->created_by,
+            'lastModifiedBy' => $this->last_modified_by
         ];
     }
 }
