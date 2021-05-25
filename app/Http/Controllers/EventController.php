@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -357,7 +356,6 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-        Log::error($request);
         if ($request->isMethod('post')) {
             $event = new Event();
             if ($request->has('params')) {
