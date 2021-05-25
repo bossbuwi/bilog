@@ -2,7 +2,7 @@
 ## _Backend Data Circle_
 
 This project was built with [Laravel](https://laravel.com/) version 8.35.1.<br>
-This project was made to serve as the REST endpoint for [IT Log](https://github.com/bossbuwi/itlog). The version releases are [here](https://github.com/bossbuwi/bilog/releases). Current version is **_1.0-Argon_** and is ready for production. This project is just the back end for an event logging app. For this to function completely, a compatible front end that consumes data using a REST endpoint must be used, in this case, [IT Log](https://github.com/bossbuwi/itlog).
+This project was made to serve as the REST endpoint for [IT Log](https://github.com/bossbuwi/itlog). The version releases are [here](https://github.com/bossbuwi/bilog/releases).  This project is just the back end for an event logging app. For this to function completely, a compatible front end that consumes data using a REST endpoint must be used, in this case, [IT Log](https://github.com/bossbuwi/itlog).
 
 ### Setup for Development
 Note: These instructions assume that XAMPP is used as the development server. As such, the PHP CLI is also provided by XAMPP. If you are using a different setup, please adjust the instructions accordingly.
