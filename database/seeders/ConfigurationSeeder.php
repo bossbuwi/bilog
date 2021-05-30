@@ -16,15 +16,15 @@ class ConfigurationSeeder extends Seeder
     public function run()
     {
         $configurations = [
-            ['name' => 'loglevel', 'value' => 'V', 'length' => '1',
+            ['name' => 'loglevel', 'value' => 'N', 'length' => '1',
                 'description' => 'Indicates the frontend\'s logging level. N is None, V is Verbose, I is Info, W is Warning and E is Error.',
                 'valid_values' => 'N,V,I,W,E', 'default_value' => 'N', 'last_modified_by' => 'admin'],
             ['name' => 'navtabsdesign', 'value' => 'M', 'length' => '1',
                 'description' => 'Sets the design of the navigation tabs. C is for Classic tabs and M is for Modern tabs.',
-                'valid_values' => 'C,M', 'default_value' => 'C', 'last_modified_by' => 'admin'],
-            ['name' => 'displayauthor', 'value' => 'N', 'length' => '1',
+                'valid_values' => 'C,M', 'default_value' => 'M', 'last_modified_by' => 'admin'],
+            ['name' => 'displayauthor', 'value' => 'Y', 'length' => '1',
                 'description' => 'Toggles if the original developer/s are displayed in the frontend\'s about information.',
-                'valid_values' => 'Y,N', 'default_value' => 'N', 'last_modified_by' => 'admin'],
+                'valid_values' => 'Y,N', 'default_value' => 'Y', 'last_modified_by' => 'admin'],
             ['name' => 'openreports', 'value' => 'N', 'length' => '1',
                 'description' => 'Gives all non admin users access to the reports tab.',
                 'valid_values' => 'Y,N', 'default_value' => 'N', 'last_modified_by' => 'admin'],
@@ -34,6 +34,9 @@ class ConfigurationSeeder extends Seeder
             ['name' => 'keycode', 'value' => 'AkRlO62y', 'length' => '8',
                 'description' => 'The key for solving the user\'s saved login code. Changing this will cause users to be logged out after a page reload.',
                 'valid_values' => 'alphanumeric', 'default_value' => 'Az1By0Mj', 'last_modified_by' => 'admin'],
+            ['name' => 'openeventhistory', 'value' => 'Y', 'length' => '1',
+                'description' => 'Allow all users access to the events history.',
+                'valid_values' => 'Y,N', 'default_value' => 'Y', 'last_modified_by' => 'admin'],
         ];
 
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');

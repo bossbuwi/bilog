@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Event;
+use App\Models\EventsHistory;
 
 class System extends Model
 {
@@ -14,5 +15,10 @@ class System extends Model
     public function event()
     {
         return $this->hasMany(Event::class);
+    }
+
+    public function eventsHistory()
+    {
+        return $this->hasMany(EventsHistory::class);
     }
 }

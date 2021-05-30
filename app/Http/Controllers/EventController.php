@@ -11,6 +11,7 @@ use App\Models\Event;
 use App\Models\System;
 use App\Models\Type;
 use App\Http\Resources\EventResource as EventResource;
+use App\Traits\HistoryService;
 
 use SimpleXLSXGen;
 
@@ -113,6 +114,8 @@ class EventController extends Controller
             $start_date = $request->input('event.startDate');
             $end_date = $request->input('event.endDate');
             $last_modified_by = $user;
+
+            HistoryService::addHistory(config('constants.datatypes.event'), $request->input('event._id'));
 
             $event->user = $user;
             $event->last_modified_by = $last_modified_by;

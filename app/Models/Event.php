@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\System;
 use App\Models\Type;
+use App\Models\EventsHistory;
 
 class Event extends Model
 {
@@ -21,6 +22,11 @@ class Event extends Model
     public function type()
     {
         return $this->belongsTo(Type::class);
+    }
+
+    public function history()
+    {
+        return $this->hasMany(EventsHistory::class, 'event_id');
     }
 
     public function scopeSystemUpgrade($query, $type)

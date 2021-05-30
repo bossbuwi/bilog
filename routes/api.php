@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\SystemController;
 use App\Http\Controllers\TypeController;
+use App\Http\Controllers\EventsHistoryController;
 use App\Http\Controllers\TestController;
 
 /*
@@ -54,5 +55,9 @@ Route::post('config/', [ConfigurationController::class, 'store']);
 //type routes
 Route::get('types/', [TypeController::class, 'index']);
 
+//event history routes
+Route::get('history/', [EventsHistoryController::class, 'index']);
+Route::get('history/{id}', [EventsHistoryController::class, 'getEventHistory']);
+
 //test routes
-Route::get('test/', [TestController::class, 'test']);
+Route::get('test/', [EventsHistoryController::class, 'index']);
